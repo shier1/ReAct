@@ -1,0 +1,16 @@
+[package]
+name = "ReAct"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+reqwest = { version = "0.13.1", features = ["json", "stream"] }
+serde = { version = "1.0.228", features = ["serde_derive"] }
+serde_json = "1.0.148"
+anyhow = "1.0.100"
+tokio = { version = "1.48.0", features = ["rt", "rt-multi-thread", "macros"] }
+regex = "1.12.2"
+thiserror = "2.0.17"
+async-trait = "0.1.89"
+unescape = "0.1.0"
+chrono = "0.4.42"
