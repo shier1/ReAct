@@ -35,10 +35,17 @@ impl ChatMessage {
         }
     }
 
-    pub fn system() -> Self {
+    pub fn system(tool_info: &str) -> Self {
         Self {
             role: "system".to_string(),
-            content: react_template::get_react_prompt(),
+            content: react_template::get_react_prompt().replace("${tool_list}", tool_info),
+        }
+    }
+
+    pub fn assistant(content: &str) -> Self{
+        Self{
+            role: "assistant".to_string(),
+            content: content.to_string(),
         }
     }
 }
@@ -85,8 +92,8 @@ impl DeepSeekClient {
         let api_key = api_key.into();
 
         let client = Client::builder()
-            .timeout(Duration::from_secs(30))
-            .connect_timeout(Duration::from_secs(10))
+            .timeout(Duration::from_secs(300))
+            .connect_timeout(Duration::from_secs(100))
             .build()
             .unwrap();
 
@@ -96,7 +103,6 @@ impl DeepSeekClient {
             base_url: "https://api.deepseek.com".to_string(),
         }
     }
-
 
     pub async fn chat(
         &self,

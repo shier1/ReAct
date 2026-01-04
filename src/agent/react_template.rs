@@ -25,7 +25,7 @@ pub fn get_react_prompt() -> String{
 
 <question>帮我找一个简单的番茄炒蛋食谱，并看看家里的冰箱里有没有西红柿。</question>
 <thought>这个任务分两步。第一步，找到番茄炒蛋的食谱。第二步，检查冰箱里是否有西红柿。我先用 find_recipe 工具找食谱。</thought>
-<action>find_recipe(dish="番茄炒蛋")</action>
+<action>find_recipe("番茄炒蛋")</action>
 <observation>简单的番茄炒蛋食谱：将2个鸡蛋打散，2个番茄切块。热油，先炒鸡蛋，盛出。再热油，炒番茄至软烂，加入鸡蛋，放盐调味即可。</observation>
 <thought>好的，我已经有食谱了。食谱需要西红柿。现在我需要用 check_fridge 工具看看冰箱里有没有西红柿。</thought>
 <action>check_fridge(item="西红柿")</action>
@@ -38,22 +38,22 @@ pub fn get_react_prompt() -> String{
 请严格遵守：
 - 你每次回答都必须包括两个标签，第一个是 <thought>，第二个是 <action> 或 <final_answer>
 - 输出 <action> 后立即停止生成，等待真实的 <observation>，擅自生成 <observation> 将导致错误
-- 如果 <action> 中的某个工具参数有多行的话，请使用 \n 来表示，如：<action>write_to_file("/tmp/test.txt", "a\nb\nc")</action>
-- 工具参数中的文件路径请使用绝对路径，不要只给出一个文件名。比如要写 write_to_file("/tmp/test.txt", "内容")，而不是 write_to_file("test.txt", "内容")
+- action中某个工具的调用方式严格为: <action>工具名(参数1@ 参数2@ 参数3)</action>如<action>write_to_file("/tmp/test.txt"@ "a")</action>否则将产生错误
+- 如果 <action> 中的某个工具参数有多行，则使用多行来进行生成
+- 工具参数中的文件路径请使用绝对路径，不要只给出一个文件名。比如要写 write_to_file("/tmp/test.txt"@ "内容")，而不是 write_to_file("test.txt"@ "内容")
+- 在生成finnal_answer之前，你不需要额外询问我任何问题
+
+本次任务可用工具：
+${tool_list}
+
+⸻
+
+环境信息：
+
+操作系统：Darwin shiers-MacBook-Pro.local 25.1.0
+当前目录: /Users/shier/work/agent/ReAct
 "#.to_string()
 }
-
-//⸻
-//
-// 本次任务可用工具：
-// ${tool_list}
-//
-// ⸻
-//
-// 环境信息：
-//
-// 操作系统：${operating_system}
-// 当前目录下文件列表：${file_list}
 
 pub fn complete_usr_template(user_prompt: &str) -> String{
     format!("<question>{user_prompt}</question>")
